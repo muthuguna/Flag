@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
+	Continents:
+	<select ng-model="selectedContinent" ng-options="x for x in continents" ng-change="selectContinent(selectedContinent)">
+	  <option value="">-- please choose a Continent --</option>
+	</select>
+	<div ng-show = "IsCountriesVisible">
+		Countries:
+		<select ng-model="selectedCountry" ng-options="y.name for y in countries" ng-change="selectCountry(selectedCountry)">
+		  <option value="">-- please choose a Country --</option>
+		</select>
+	</div>
+	<div ng-show = "IsFlagVisible">
+		Flag:{{flg[0]}}
+	</div>
+</div>
+
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+	$scope.init = function () {
+	    $http.get('http://localhost:8400/rest/flagService/continents')
+	    .then(function (response) {
+	    	$scope.IsCountriesVisible = false;
+	    	$scope.IsFlagVisible = false;
+	        $scope.continents = response.data;
+	    }, function (response) {
+	    	$scope.IsCountriesVisible = false;
+	    	$scope.IsFlagVisible = false;
+	        console.log('error in load continents');
+	    });
+	}
+
+	$scope.selectContinent = function(continent) {
+       $http.get('http://localhost:8400/rest/flagService/countries/'+continent).then(function(response) {
+	           if(response.data){    
+	    	   		$scope.countries = response.data;
+	               	$scope.IsFlagVisible = false;
+	               	$scope.IsCountriesVisible = true;
+	           } else {
+	        	   $scope.IsCountriesVisible = false;
+	   	    		$scope.IsFlagVisible = false;
+	           }
+            }, function(response) {
+            	$scope.IsCountriesVisible = false;
+    	    	$scope.IsFlagVisible = false;
+                console.log('error in  selectContinent..');
+            });
+    }
+
+	$scope.selectCountry = function(country) {
+		if(country){
+       		$http.get('http://localhost:8400/rest/flagService/flag/'+country.name).then(function(response) {
+    	   		$scope.IsFlagVisible = true;
+               	$scope.flg = response.data;
+            }, function(response) {
+           		$scope.IsFlagVisible = false;
+               	console.log('error in selectFlag..');
+            });
+		} else {
+			$scope.IsFlagVisible = false;
+		}
+    }
+});	
+
+
+
+</script>
+</body>
+</html>

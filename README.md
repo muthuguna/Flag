@@ -6,7 +6,7 @@ Installation Steps:
 1. maven clean install on pom.xml in flag-service and run the FlagServiceApplication
 2. maven clean install on pom.xml in mysql-db-service and run the MysqlDbServiceApplication
 
-This application is being developed with UI (Angular) as well
+This application has been developed with UI (Angular) as well.
 Flag service application can be accessed using the below URL
 http://localhost:8400/index.html
 
@@ -18,7 +18,7 @@ http://localhost:8400/rest/flagService/countries/america
 http://localhost:8400/rest/flagService/flag/india
 
 
-All the user activity will audited in a MySQL DB table “Audit”
+All the user activity will be audited in a MySQL DB table “Audit”
 Test suit has been created to test all the service methods using MockMvc in springiest framework.
 Used log4j framework for logging the application execution flow with debug enabled.
 
